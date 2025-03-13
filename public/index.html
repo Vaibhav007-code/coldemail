@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cold Email Sender</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cold Email Sender</h1>
+            <p class="subtitle">Extract emails from PDF files and send personalized cold emails</p>
+        </header>
+
+        <section>
+            <h2><i class="fas fa-file-pdf"></i> Upload PDF</h2>
+            <div class="file-input-wrapper">
+                <label for="file" class="file-upload-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Drag & drop your PDF file here or click to browse</span>
+                </label>
+                <input type="file" id="file" accept=".pdf">
+            </div>
+            <p id="upload-status"></p>
+            
+            <div id="email-list" class="hidden">
+                <h3 class="mb-2">Extracted Email Addresses</h3>
+                <ul></ul>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-envelope"></i> Compose Email</h2>
+            
+            <div class="form-group">
+                <label for="subject">Subject Line</label>
+                <input type="text" id="subject" placeholder="Enter your email subject">
+            </div>
+            
+            <div class="form-group">
+                <label for="body">Email Body</label>
+                <textarea id="body" placeholder="Type your email content here. You can use {name} as a placeholder for the recipient's name."></textarea>
+            </div>
+            
+            <button id="send" class="button" disabled>
+                <i class="fas fa-paper-plane"></i> Send Emails
+            </button>
+        </section>
+        
+        <section id="sending-status" class="hidden">
+            <h2><i class="fas fa-tasks"></i> Sending Status</h2>
+            <ul></ul>
+        </section>
+        
+        <footer>
+            <p>&copy; 2025 Cold Email Sender. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

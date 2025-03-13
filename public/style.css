@@ -1,0 +1,568 @@
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f7f9fc;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container */
+.container {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+    margin: 40px auto;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a3b5d;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Sections */
+section {
+    margin-bottom: 30px;
+    background-color: #fafbfc;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #eaeef3;
+}
+
+section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+}
+
+section h2 i {
+    margin-right: 10px;
+    color: #3b82f6;
+}
+
+/* File Upload */
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.file-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f4f8;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 30px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload-label:hover {
+    background-color: #e1e9f0;
+    border-color: #94a3b8;
+}
+
+.file-upload-label i {
+    font-size: 32px;
+    color: #3b82f6;
+    margin-bottom: 10px;
+}
+
+.file-upload-label span {
+    font-size: 16px;
+    color: #64748b;
+}
+
+input[type="file"] {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+#upload-status {
+    margin-top: 16px;
+    color: #64748b;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+}
+
+/* Email List */
+#email-list {
+    margin-top: 20px;
+}
+
+#email-list.hidden {
+    display: none;
+}
+
+#email-list ul {
+    list-style-type: none;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#email-list ul li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #475569;
+    font-size: 14px;
+}
+
+#email-list ul li:last-child {
+    border-bottom: none;
+}
+
+/* Email Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* Button */
+.button {
+    display: block;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: #2563eb;
+}
+
+.button:active {
+    transform: translateY(1px);
+}
+
+.button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Sending Status */
+#sending-status {
+    margin-top: 30px;
+}
+
+#sending-status.hidden {
+    display: none;
+}
+
+#sending-status ul {
+    list-style-type: none;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#sending-status ul li {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+#sending-status ul li:last-child {
+    border-bottom: none;
+}
+
+#sending-status ul li.success {
+    color: #10b981;
+}
+
+#sending-status ul li.error {
+    color: #ef4444;
+}
+
+#sending-status ul li.pending {
+    color: #f59e0b;
+}
+
+/* Notification */
+/* Notification */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+    max-width: 320px;
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification.success {
+    background-color: #10b981;
+}
+
+.notification.error {
+    background-color: #ef4444;
+}
+
+.notification.warning {
+    background-color: #f59e0b;
+}
+
+.notification.info {
+    background-color: #3b82f6;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 25px;
+        margin: 20px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    .file-upload-label {
+        padding: 20px;
+    }
+    
+    .button {
+        padding: 12px 20px;
+    }
+    
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+/* Loading spinner */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(59, 130, 246, 0.3);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* Additional utility classes */
+.text-center {
+    text-align: center;
+}
+
+.mt-2 {
+    margin-top: 10px;
+}
+
+.mt-4 {
+    margin-top: 20px;
+}
+
+.mb-2 {
+    margin-bottom: 10px;
+}
+
+.mb-4 {
+    margin-bottom: 20px;
+}
+
+/* Progress bar */
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #3b82f6;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #334155;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #334155 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Email template selector */
+.template-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.template-option {
+    padding: 8px 16px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.template-option:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.template-option.selected {
+    background-color: #dbeafe;
+    border-color: #93c5fd;
+    color: #2563eb;
+}
+/* Add this to your existing CSS */
+
+/* Preview links */
+.preview-notice {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    color: #0369a1;
+    font-size: 14px;
+    text-align: center;
+}
+
+#sending-status ul li a {
+    color: #2563eb;
+    text-decoration: none;
+    margin-left: 5px;
+    font-weight: 500;
+}
+
+#sending-status ul li a:hover {
+    text-decoration: underline;
+}
+/* Add these to your existing CSS */
+
+/* Error handling styles */
+.troubleshoot-tips {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff8f1;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    color: #9a3412;
+}
+
+.troubleshoot-tips h4 {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.troubleshoot-tips ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.troubleshoot-tips li {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* Email list selection */
+#email-list ul li {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 3px solid transparent;
+}
+
+#email-list ul li:hover {
+    background-color: #f9fafb;
+}
+
+#email-list ul li.selected {
+    background-color: #f0f9ff;
+    border-left: 3px solid #3b82f6;
+    font-weight: 500;
+}
+
+/* Enhanced status icons */
+#sending-status ul li i {
+    margin-right: 8px;
+}
+
+.success i {
+    color: #10b981;
+}
+
+.error i {
+    color: #ef4444;
+}
+
+.pending i {
+    color: #f59e0b;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.loading {
+    animation: pulse 1.5s infinite;
+}
