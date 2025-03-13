@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendingStatus = document.getElementById('sending-status');
     const sendingStatusList = sendingStatus.querySelector('ul');
     const notification = document.getElementById('notification');
+    
+    // New elements for sender details
+    const senderNameInput = document.getElementById('sender-name');
+    const senderEmailInput = document.getElementById('sender-email');
+    
+    // Manual email addition elements
+    const manualEmailInput = document.getElementById('manual-email');
+    const addEmailButton = document.getElementById('add-email');
   
     // Show notification
     function showNotification(message, type = 'success') {
@@ -35,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       formData.append('file', file);
   
       try {
+        // Clear the email list display
         emailListContainer.innerHTML = '';
         emailList.classList.add('hidden');
   
@@ -43,17 +52,21 @@ document.addEventListener('DOMContentLoaded', () => {
   
         if (!response.ok) throw new Error(data.error || 'Upload failed');
   
-        if (data.emails.length > 0) {
-          data.emails.forEach(email => {
+        // Merge extracted emails with any manually added emails
+        window.extractedEmails = [...(window.extractedEmails || []), ...data.emails];
+  
+        if (window.extractedEmails.length > 0) {
+          // Remove duplicates
+          window.extractedEmails = Array.from(new Set(window.extractedEmails));
+          window.extractedEmails.forEach(email => {
             const li = document.createElement('li');
             li.textContent = email;
             emailListContainer.appendChild(li);
           });
           emailList.classList.remove('hidden');
           sendButton.disabled = false;
-          window.extractedEmails = data.emails;
-          uploadStatus.textContent = `Found ${data.emails.length} emails`;
-          showNotification(`Extracted ${data.emails.length} emails`, 'success');
+          uploadStatus.textContent = `Found ${data.emails.length} emails from PDF`;
+          showNotification(`Extracted ${data.emails.length} emails from PDF`, 'success');
         } else {
           uploadStatus.textContent = 'No emails found';
           showNotification('No emails found', 'warning');
@@ -64,18 +77,61 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   
+    // Manual email addition handler
+    addEmailButton.addEventListener('click', () => {
+      const email = manualEmailInput.value.trim();
+      if (!email) {
+        showNotification('Please enter an email address', 'error');
+        return;
+      }
+      // Simple email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showNotification('Invalid email address', 'error');
+        return;
+      }
+      // Initialize or merge with existing emails
+      window.extractedEmails = window.extractedEmails || [];
+      if (window.extractedEmails.includes(email)) {
+        showNotification('Email already added', 'warning');
+        manualEmailInput.value = '';
+        return;
+      }
+      window.extractedEmails.push(email);
+      if (emailList.classList.contains('hidden')) {
+        emailList.classList.remove('hidden');
+      }
+      const li = document.createElement('li');
+      li.textContent = email;
+      emailListContainer.appendChild(li);
+      showNotification('Email added successfully', 'success');
+      manualEmailInput.value = '';
+      sendButton.disabled = false;
+    });
+  
     // Email sending handler
     sendButton.addEventListener('click', async () => {
       const subject = subjectInput.value.trim();
       const body = bodyInput.value.trim();
-      const emails = window.extractedEmails || [];
+      const recipientEmails = window.extractedEmails || [];
+      const senderName = senderNameInput.value.trim();
+      const senderEmail = senderEmailInput.value.trim() || '';
   
       if (!subject || !body) {
         showNotification('Subject and body are required', 'error');
         return;
       }
-      if (emails.length === 0) {
-        showNotification('No emails to send', 'error');
+      if (recipientEmails.length === 0) {
+        showNotification('No recipient emails to send', 'error');
+        return;
+      }
+      if (!senderName) {
+        showNotification('Please enter your name', 'error');
+        return;
+      }
+      // Optional: Validate senderEmail if provided; otherwise, it will default on the server side.
+      if (senderEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(senderEmail)) {
+        showNotification('Invalid sender email address', 'error');
         return;
       }
   
@@ -87,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let successCount = 0;
       let failCount = 0;
   
-      for (const email of emails) {
+      for (const email of recipientEmails) {
         const li = document.createElement('li');
         li.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Sending to ${email}...`;
         li.classList.add('pending');
@@ -97,7 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
           const response = await fetch('/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ subject, body, email })
+            body: JSON.stringify({
+              subject,
+              body,
+              email,
+              senderName,
+              senderEmail,
+            }),
           });
           const data = await response.json();
   
@@ -121,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
       sendButton.disabled = false;
       sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send Emails';
   
-      // Summary and troubleshooting
       if (failCount > 0) {
         const tips = document.createElement('div');
         tips.className = 'troubleshoot-tips';
