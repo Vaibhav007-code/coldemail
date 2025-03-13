@@ -13,7 +13,7 @@ app.use(express.json());
 // Load default credentials from environment variables
 const GMAIL_USER = process.env.GMAIL_USER;
 const GMAIL_PASS = process.env.GMAIL_PASS;
-// Default sender name if the user does not provide one
+// Default sender name if the user does not provide one (extracted from GMAIL_USER)
 const DEFAULT_SENDER_NAME = process.env.SENDER_NAME || GMAIL_USER.split('@')[0];
 
 if (!GMAIL_USER || !GMAIL_PASS) {
@@ -57,8 +57,13 @@ app.post('/send', async (req, res) => {
     subject = subject?.trim();
     body = body?.trim();
     email = email?.trim();
-    // Use provided sender name/email or fall back to defaults
+
+    // Use the user-supplied sender name if provided; otherwise, fall back to default.
+    // This ensures that if a user enters their own name, it will be used in the "from" field.
     senderName = senderName?.trim() || DEFAULT_SENDER_NAME;
+
+    // For the sender email, if the user provides one we'll use it,
+    // but keep in mind that Gmail may override it with your authenticated account.
     senderEmail = senderEmail?.trim() || GMAIL_USER;
 
     if (!subject || !body) {
@@ -79,7 +84,8 @@ app.post('/send', async (req, res) => {
     });
 
     const mailOptions = {
-      // Use the user-supplied senderName and senderEmail
+      // Use the user-supplied senderName. Even if senderEmail is customized,
+      // Gmail might enforce your authenticated email. The display name will be as provided.
       from: `${senderName} <${senderEmail}>`,
       to: email,
       subject,
