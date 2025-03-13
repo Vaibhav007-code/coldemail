@@ -7,13 +7,14 @@ require('dotenv').config();
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
+// Serve static files from the "public" folder
 app.use(express.static('public'));
 app.use(express.json());
 
 // Load default credentials from environment variables
 const GMAIL_USER = process.env.GMAIL_USER;
 const GMAIL_PASS = process.env.GMAIL_PASS;
-// Default sender name if the user does not provide one (extracted from GMAIL_USER)
+// Default sender name if the user does not provide one
 const DEFAULT_SENDER_NAME = process.env.SENDER_NAME || GMAIL_USER.split('@')[0];
 
 if (!GMAIL_USER || !GMAIL_PASS) {
@@ -22,8 +23,7 @@ if (!GMAIL_USER || !GMAIL_PASS) {
 }
 
 // Simple email validation function
-const isValidEmail = (email) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 app.post('/upload', upload.single('file'), async (req, res) => {
   try {
@@ -33,14 +33,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'Uploaded file is not a PDF' });
     }
 
-    console.log(
-      `Processing file: ${req.file.originalname}, size: ${req.file.size}`
-    );
+    console.log(`Processing file: ${req.file.originalname}, size: ${req.file.size}`);
     const data = await pdfParse(req.file.buffer);
     const emails = [
       ...new Set(
-        data.text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) ||
-          []
+        data.text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) || []
       ),
     ];
     res.json({ emails });
@@ -59,11 +56,8 @@ app.post('/send', async (req, res) => {
     email = email?.trim();
 
     // Use the user-supplied sender name if provided; otherwise, fall back to default.
-    // This ensures that if a user enters their own name, it will be used in the "from" field.
     senderName = senderName?.trim() || DEFAULT_SENDER_NAME;
-
-    // For the sender email, if the user provides one we'll use it,
-    // but keep in mind that Gmail may override it with your authenticated account.
+    // For sender email, if not provided, default to the authenticated email.
     senderEmail = senderEmail?.trim() || GMAIL_USER;
 
     if (!subject || !body) {
@@ -84,8 +78,7 @@ app.post('/send', async (req, res) => {
     });
 
     const mailOptions = {
-      // Use the user-supplied senderName. Even if senderEmail is customized,
-      // Gmail might enforce your authenticated email. The display name will be as provided.
+      // This uses the user-supplied senderName. Note: Gmail may override senderEmail.
       from: `${senderName} <${senderEmail}>`,
       to: email,
       subject,
@@ -100,8 +93,7 @@ app.post('/send', async (req, res) => {
     console.error('Email send error:', error);
     let errorMessage = 'Failed to send email';
     if (error.code === 'EAUTH') {
-      errorMessage =
-        'Authentication failed. Check your Gmail credentials or use an App Password if 2FA is enabled.';
+      errorMessage = 'Authentication failed. Check your Gmail credentials or use an App Password if 2FA is enabled.';
     } else if (error.code === 'EENVELOPE') {
       errorMessage = 'Invalid recipient email address.';
     } else if (error.code === 'ECONNECTION') {
